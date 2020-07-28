@@ -19,8 +19,8 @@ public:
 
     Matrix* calculate(Matrix *);
 
-    bool process(std::vector<std::string> fileInputs);
-    bool run(int argc, char argv[ARGV_MAX][PATH_MAX]) override;
+    bool process(std::vector<std::string>, bool);
+    bool run(bool, bool, int argc, char argv[ARGV_MAX][PATH_MAX]) override;
 
     void printHelp() override;
 };

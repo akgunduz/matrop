@@ -37,7 +37,7 @@ public :
     void setPath(const char *);
     const char *getPath();
 
-    virtual bool run(int argc, char argv[ARGV_MAX][PATH_MAX]) = 0;
+    virtual bool run(bool, bool, int argc, char argv[ARGV_MAX][PATH_MAX]) = 0;
     virtual void printHelp() = 0;
 
     virtual ~App();

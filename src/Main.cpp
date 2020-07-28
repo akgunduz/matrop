@@ -7,6 +7,9 @@ int main(int argc, char *const *argv) {
 
     int wait = 0;
 
+    bool createMode = false;
+    bool multiMode = false;
+
     int filtered_argc = 0;
     char filtered_argv[ARGV_MAX][PATH_MAX];
 
@@ -20,9 +23,24 @@ int main(int argc, char *const *argv) {
                 wait = atoi(argv[i]);
             }
 
-        } else {
-            strcpy(filtered_argv[filtered_argc++], argv[i]);
+            continue;
         }
+
+        if (!strcmp (argv[i], "-c")) {
+
+            createMode = true;
+
+            continue;
+        }
+
+        if (!strcmp (argv[i], "-m")) {
+
+            multiMode = true;
+
+            continue;
+        }
+
+        strcpy(filtered_argv[filtered_argc++], argv[i]);
     }
 
     App *app = nullptr;
@@ -51,7 +69,7 @@ int main(int argc, char *const *argv) {
         return EXIT_SUCCESS;
     }
 
-    app->run(filtered_argc, filtered_argv);
+    app->run(createMode, multiMode, filtered_argc, filtered_argv);
 
     if (wait) {
 

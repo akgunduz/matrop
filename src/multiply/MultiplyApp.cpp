@@ -52,7 +52,7 @@ Matrix* MultiplyApp::calculate(Matrix *A, Matrix *B) {
     return calculated;
 }
 
-bool MultiplyApp::process(std::vector<std::string> fileInputs) {
+bool MultiplyApp::process(std::vector<std::string> fileInputs, bool multiMode) {
 
     Matrix *A, *B, *C;
 
@@ -62,47 +62,64 @@ bool MultiplyApp::process(std::vector<std::string> fileInputs) {
         return false;
     }
 
-    printf("Loading Matrix Input File %d : %s \n", 0, fileInputs[0].c_str());
+    if (!multiMode) {
 
-    C = new Matrix(fileInputs[0].c_str());
+        printf("Loading Matrix Input File %d : %s \n", 0, fileInputs[0].c_str());
 
-    for (int i = 1; i < fileInputs.size() - 1; i++) {
+        C = new Matrix(fileInputs[0].c_str());
 
-        A = C;
+        for (int i = 1; i < fileInputs.size() - 1; i++) {
 
-        printf("Loading Matrix Input File %d : %s \n", i, fileInputs[i].c_str());
+            A = C;
 
-        B = new Matrix(fileInputs[i].c_str());
+            printf("Loading Matrix Input File %d : %s \n", i, fileInputs[i].c_str());
+
+            B = new Matrix(fileInputs[i].c_str());
+
+            C = calculate(A, B);
+
+            delete A;
+
+            delete B;
+        }
+
+        C->printToFile(fileInputs[fileInputs.size() - 1].c_str());
+
+        printf("Output File Generated : %s \n\n", fileInputs[fileInputs.size() - 1].c_str());
+
+        delete C;
+
+        return true;
+    }
+
+    for (int i = 0; i < fileInputs.size(); i = i + 3) {
+
+        A = new Matrix(fileInputs[i].c_str());
+
+        B = new Matrix(fileInputs[i + 1].c_str());
 
         C = calculate(A, B);
+
+        C->printToFile(fileInputs[i + 2].c_str());
+
+        printf("Output File Generated : %s \n\n", fileInputs[i + 2].c_str());
 
         delete A;
 
         delete B;
+
+        delete C;
     }
-
-    C->printToFile(fileInputs[fileInputs.size() - 1].c_str());
-
-    printf("Output File Generated : %s \n\n", fileInputs[fileInputs.size() - 1].c_str());
-
-    delete C;
 
     return true;
 }
 
-bool MultiplyApp::run(int argc, char argv[ARGV_MAX][PATH_MAX]) {
+bool MultiplyApp::run(bool createMode, bool multiMode, int argc, char argv[ARGV_MAX][PATH_MAX]) {
 
     char fileBuffer[PATH_MAX];
     std::vector<std::string> fileInputs;
-    bool createMode = false;
 
     for (int i = 0; i < argc; i++) {
-
-        if (!strcmp (argv[i], "-c")) {
-
-            createMode = true;
-            continue;
-        }
 
         if (isdigit(argv[i][0])) {
             sprintf(fileBuffer, "%s/matrix/MatrixInput_%s", getPath(), argv[i]);
@@ -117,5 +134,5 @@ bool MultiplyApp::run(int argc, char argv[ARGV_MAX][PATH_MAX]) {
         return creator(fileInputs[0].c_str(), atoi(argv[2]), atoi(argv[3]));
     }
 
-    return process(fileInputs);
+    return process(fileInputs, multiMode);
 }

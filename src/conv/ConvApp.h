@@ -24,8 +24,8 @@ public:
     Matrix* calculate(Matrix *, TypeFilter&);
     bool extractFilter(const char* file, TypeFilter&);
 
-    bool process(std::vector<std::string> fileInputs, const char*);
-    bool run(int argc, char argv[ARGV_MAX][PATH_MAX]) override;
+    bool process(std::vector<std::string> fileInputs, const char*, bool);
+    bool run(bool, bool, int argc, char argv[ARGV_MAX][PATH_MAX]) override;
 
     void printHelp() override;
 };

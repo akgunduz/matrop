@@ -117,9 +117,7 @@ bool ConvApp::extractFilter(const char* file, TypeFilter& filter) {
 
     return true;
 }
-
-
-bool ConvApp::process(std::vector<std::string> fileInputs, const char* filterFile) {
+bool ConvApp::process(std::vector<std::string> fileInputs, const char* filterFile, bool multiMode) {
 
     Matrix *A, *B;
 
@@ -137,44 +135,58 @@ bool ConvApp::process(std::vector<std::string> fileInputs, const char* filterFil
         return false;
     }
 
-    printf("Loading Matrix Input File %d : %s \n", 0, fileInputs[0].c_str());
+    if (!multiMode) {
 
-    B = new Matrix(fileInputs[0].c_str());
+        printf("Loading Matrix Input File %d : %s \n", 0, fileInputs[0].c_str());
 
-    for (int i = 1; i < fileInputs.size(); i++) {
+        B = new Matrix(fileInputs[0].c_str());
 
-        A = B;
+        for (int i = 1; i < fileInputs.size(); i++) {
 
-        B = calculate(A,filter);
+            A = B;
+
+            B = calculate(A, filter);
+
+            delete A;
+
+        }
+
+        B->printToFile(fileInputs[fileInputs.size() - 1].c_str());
+
+        printf("Output File Generated : %s \n\n", fileInputs[fileInputs.size() - 1].c_str());
+
+        delete B;
+
+        return true;
+    }
+
+    for (int i = 0; i < fileInputs.size(); i = i + 2) {
+
+        A = new Matrix(fileInputs[i].c_str());
+
+        B = calculate(A, filter);
+
+        B->printToFile(fileInputs[i + 1].c_str());
+
+        printf("Output File Generated : %s \n\n", fileInputs[i + 1].c_str());
 
         delete A;
 
+        delete B;
     }
-
-    B->printToFile(fileInputs[fileInputs.size() - 1].c_str());
-
-    printf("Output File Generated : %s \n\n", fileInputs[fileInputs.size() - 1].c_str());
-
-    delete B;
 
     return true;
 }
 
-bool ConvApp::run(int argc, char argv[ARGV_MAX][PATH_MAX]) {
+bool ConvApp::run(bool createMode, bool multiMode, int argc, char argv[ARGV_MAX][PATH_MAX]) {
 
     char fileBuffer[PATH_MAX];
     std::vector<std::string> fileInputs;
     std::string filterFile;
-    bool createMode = false;
+
     bool filterMode = false;
 
     for (int i = 0; i < argc; i++) {
-
-        if (!strcmp (argv[i], "-c")) {
-
-            createMode = true;
-            continue;
-        }
 
         if (!strcmp (argv[i], "-f")) {
 
@@ -201,5 +213,5 @@ bool ConvApp::run(int argc, char argv[ARGV_MAX][PATH_MAX]) {
         return creator(fileInputs[0].c_str(), atoi(argv[2]), atoi(argv[3]));
     }
 
-    return process(fileInputs, filterFile.c_str());
+    return process(fileInputs, filterFile.c_str(), multiMode);
 }
