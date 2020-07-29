@@ -4,12 +4,6 @@
 
 #include "ConvApp.h"
 
-ConvApp::ConvApp(const char *path) : App(path) {
-
-}
-
-ConvApp::~ConvApp() = default;
-
 void ConvApp::printHelp() {
 
     printf("\n------------------- Conv Parameters------------------- \n");
@@ -178,7 +172,7 @@ bool ConvApp::process(std::vector<std::string> fileInputs, const char* filterFil
     return true;
 }
 
-bool ConvApp::run(bool createMode, bool multiMode, int argc, char argv[ARGV_MAX][PATH_MAX]) {
+bool ConvApp::run(bool multiMode, int argc, char argv[ARGV_MAX][PATH_MAX]) {
 
     char fileBuffer[PATH_MAX];
     std::vector<std::string> fileInputs;
@@ -194,23 +188,12 @@ bool ConvApp::run(bool createMode, bool multiMode, int argc, char argv[ARGV_MAX]
             continue;
         }
 
-        if (isdigit(argv[i][0])) {
-            sprintf(fileBuffer, "%s/matrix/MatrixInput_%s", getPath(), argv[i]);
-
-        } else {
-            sprintf(fileBuffer, "%s/matrix/%s", getPath(), argv[i]);
-        }
-
         if (filterMode) {
-            filterFile = fileBuffer;
+            filterFile = Util::getFileName(argv[i]);
             filterMode = false;
         } else {
-            fileInputs.emplace_back(fileBuffer);
+            fileInputs.emplace_back(Util::getFileName(argv[i]));
         }
-    }
-
-    if (createMode) {
-        return creator(fileInputs[0].c_str(), atoi(argv[2]), atoi(argv[3]));
     }
 
     return process(fileInputs, filterFile.c_str(), multiMode);

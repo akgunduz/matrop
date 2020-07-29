@@ -96,8 +96,6 @@ void Matrix::readFromFile(const char *path) {
 
 bool Matrix::printToFile(const char *path) {
 
-    Util::mkPath(path);
-
     FILE *fd = fopen(path, "w");
     if (!fd) {
         return false;

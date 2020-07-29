@@ -16,8 +16,8 @@ class ConvApp : public App {
     TypeFilter defaultFilter {1.1f / 11.0f, 2.2f / 11.0f, 4.4f / 11.0f, 2.2f / 11.0f, 1.1f / 11.0f};
 
 public:
-    explicit ConvApp(const char *path);
-    ~ConvApp() override;
+    ConvApp() = default;
+    ~ConvApp() override = default;
 
     bool conv(Matrix *, Matrix *, TypeFilter&, Matrix *);
 
@@ -25,7 +25,7 @@ public:
     bool extractFilter(const char* file, TypeFilter&);
 
     bool process(std::vector<std::string> fileInputs, const char*, bool);
-    bool run(bool, bool, int argc, char argv[ARGV_MAX][PATH_MAX]) override;
+    bool run(bool, int argc, char argv[ARGV_MAX][PATH_MAX]) override;
 
     void printHelp() override;
 };

@@ -2,6 +2,7 @@
 #include <scan/ScanApp.h>
 #include <conv/ConvApp.h>
 #include "App.h"
+#include "Util.h"
 
 int main(int argc, char *const *argv) {
 
@@ -43,33 +44,38 @@ int main(int argc, char *const *argv) {
         strcpy(filtered_argv[filtered_argc++], argv[i]);
     }
 
-    App *app = nullptr;
+    App* app = nullptr;
 
-#if defined(MULTIPLY)
+#if defined(MULTIPLY) || defined(ALL)
 
-    app = new MultiplyApp(argv[0]);
-
-
-#elif defined(SCAN)
-
-    app = new ScanApp(argv[0]);
-
-#elif defined(CONV)
-
-    app = new ConvApp(argv[0]);
-
-#else
-
-#error "Application mode is not defined"
+    app = new MultiplyApp();
 
 #endif
+
+#if defined(SCAN) || defined(ALL)
+
+    app = new ScanApp();
+
+#endif
+
+#if defined(CONV) || defined(ALL)
+
+    app = new ConvApp();
+
+#endif
+
 
     if (argc < 2) {
         app->printHelp();
         return EXIT_SUCCESS;
     }
 
-    app->run(createMode, multiMode, filtered_argc, filtered_argv);
+    if (createMode) {
+        return app->creator(Util::getFileName(filtered_argv[0]).c_str(),
+                atoi(filtered_argv[1]), atoi(filtered_argv[2]));
+    }
+
+    app->run(multiMode, filtered_argc, filtered_argv);
 
     if (wait) {
 

@@ -4,12 +4,6 @@
 
 #include "MultiplyApp.h"
 
-MultiplyApp::MultiplyApp(const char *path) : App(path) {
-
-}
-
-MultiplyApp::~MultiplyApp() = default;
-
 void MultiplyApp::printHelp() {
 
     printf("\n----------------- Multiply Parameters----------------- \n");
@@ -114,24 +108,13 @@ bool MultiplyApp::process(std::vector<std::string> fileInputs, bool multiMode) {
     return true;
 }
 
-bool MultiplyApp::run(bool createMode, bool multiMode, int argc, char argv[ARGV_MAX][PATH_MAX]) {
+bool MultiplyApp::run(bool multiMode, int argc, char argv[ARGV_MAX][PATH_MAX]) {
 
-    char fileBuffer[PATH_MAX];
     std::vector<std::string> fileInputs;
 
     for (int i = 0; i < argc; i++) {
 
-        if (isdigit(argv[i][0])) {
-            sprintf(fileBuffer, "%s/matrix/MatrixInput_%s", getPath(), argv[i]);
-
-        } else {
-            sprintf(fileBuffer, "%s/matrix/%s", getPath(), argv[i]);
-        }
-        fileInputs.emplace_back(fileBuffer);
-    }
-
-    if (createMode) {
-        return creator(fileInputs[0].c_str(), atoi(argv[2]), atoi(argv[3]));
+        fileInputs.emplace_back(Util::getFileName(argv[i]));
     }
 
     return process(fileInputs, multiMode);

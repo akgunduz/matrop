@@ -6,45 +6,31 @@
 #define MATROP_APP_H
 
 #include "Common.h"
+#include "Util.h"
 
-#define ARGV_LENGTH 30
 #define ARGV_MAX 20
 
-enum APP_MODES {
-    MATRIX_MODE,
-    SCAN_MODE,
-    CONV_MODE,
+enum APPTYPE {
+    APPTYPE_MULTIPLY,
+    APPTYPE_SCAN,
+    APPTYPE_CONV,
+    APPTYPE_MAX,
 };
 
 class App {
 
 protected:
 
-    char rootPath[PATH_MAX]{};
-
-    bool print_enabled{false};
-
-    FILE *debugFile = nullptr;
-
-protected:
-
-    explicit App(const char *);
+    App() = default;
 
 public :
 
     bool creator(const char*, uint32_t, uint32_t);
 
-    void setPath(const char *);
-    const char *getPath();
-
-    virtual bool run(bool, bool, int argc, char argv[ARGV_MAX][PATH_MAX]) = 0;
+    virtual bool run(bool, int argc, char argv[ARGV_MAX][PATH_MAX]) = 0;
     virtual void printHelp() = 0;
 
-    virtual ~App();
-
-public:
-
-    App() = default;
+    virtual ~App() = default;
 
 };
 

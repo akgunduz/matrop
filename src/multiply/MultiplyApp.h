@@ -12,15 +12,15 @@
 class MultiplyApp : public App {
 
 public:
-    explicit MultiplyApp(const char *path);
-    ~MultiplyApp() override;
+    MultiplyApp() = default;
+    ~MultiplyApp() override = default;
 
     bool multiply(Matrix *, Matrix *, Matrix *);
 
     Matrix* calculate(Matrix *A, Matrix *B);
 
     bool process(std::vector<std::string> fileInputs, bool);
-    bool run(bool, bool, int argc, char argv[ARGV_MAX][PATH_MAX]) override;
+    bool run(bool, int argc, char argv[ARGV_MAX][PATH_MAX]) override;
 
     void printHelp() override;
 };

@@ -5,13 +5,6 @@
 
 #include "ScanApp.h"
 
-
-ScanApp::ScanApp(const char *path) : App(path) {
-
-}
-
-ScanApp::~ScanApp() = default;
-
 void ScanApp::printHelp() {
 
     printf("\n------------------- Scan Parameters------------------- \n");
@@ -35,7 +28,6 @@ bool ScanApp::scan(Matrix *A, Matrix *calculated) {
 
     return true;
 }
-
 
 Matrix* ScanApp::calculate(Matrix *A) {
 
@@ -101,24 +93,13 @@ bool ScanApp::process(std::vector<std::string> fileInputs, bool multiMode) {
     return true;
 }
 
-bool ScanApp::run(bool createMode, bool multiMode, int argc, char argv[ARGV_MAX][PATH_MAX]) {
+bool ScanApp::run(bool multiMode, int argc, char argv[ARGV_MAX][PATH_MAX]) {
 
-    char fileBuffer[PATH_MAX];
     std::vector<std::string> fileInputs;
 
     for (int i = 0; i < argc; i++) {
 
-        if (isdigit(argv[i][0])) {
-            sprintf(fileBuffer, "%s/matrix/MatrixInput_%s", getPath(), argv[i]);
-
-        } else {
-            sprintf(fileBuffer, "%s/matrix/%s", getPath(), argv[i]);
-        }
-        fileInputs.emplace_back(fileBuffer);
-    }
-
-    if (createMode) {
-        return creator(fileInputs[0].c_str(), atoi(argv[2]), atoi(argv[2]));
+        fileInputs.emplace_back(Util::getFileName(argv[i]));
     }
 
     return process(fileInputs, multiMode);

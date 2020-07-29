@@ -12,15 +12,15 @@
 class ScanApp : public App {
 
 public:
-    explicit ScanApp(const char *path);
-    ~ScanApp() override;
+    ScanApp() = default;
+    ~ScanApp() override = default;
 
     bool scan(Matrix *, Matrix *);
 
     Matrix* calculate(Matrix *);
 
     bool process(std::vector<std::string>, bool);
-    bool run(bool, bool, int argc, char argv[ARGV_MAX][PATH_MAX]) override;
+    bool run(bool, int argc, char argv[ARGV_MAX][PATH_MAX]) override;
 
     void printHelp() override;
 };

@@ -10,8 +10,7 @@ class Util {
 
 public:
 
-    static void mkPath(const char *path);
-    static bool endCheck(const char *str, const char *suffix);
+    static std::string getFileName(const char* arg);
 };
 
 

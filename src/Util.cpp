@@ -5,37 +5,16 @@
 #include "Common.h"
 #include "Util.h"
 
-void Util::mkPath(const char *path) {
+std::string Util::getFileName(const char *arg) {
 
-    char tmp[PATH_MAX];
-    char *p = nullptr;
+    char fileBuffer[PATH_MAX];
+    if (isdigit(arg[0])) {
+        sprintf(fileBuffer, "MatrixInput_%s", arg);
 
-    const char *pos = strrchr(path, '/');
-
-    snprintf(tmp, pos - path + 1, "%s", path);
-
-    for(p = tmp + 1; *p; p++) {
-        if (*p == '/') {
-            *p = 0;
-            mkdir(tmp, S_IRWXU);
-            *p = '/';
-        }
-    }
-    mkdir(tmp, S_IRWXU);
-}
-
-bool Util::endCheck(const char *str, const char *suffix) {
-
-    if (!str || !suffix)
-        return false;
-
-    size_t lenstr = strlen(str);
-    size_t lensuffix = strlen(suffix);
-
-    if (lensuffix >  lenstr) {
-        return false;
+    } else {
+        sprintf(fileBuffer, "%s", arg);
     }
 
-    return strncmp(str + lenstr - lensuffix, suffix, lensuffix) == 0;
+    return std::string(fileBuffer);
 }
 

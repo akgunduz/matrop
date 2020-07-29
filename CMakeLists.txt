@@ -46,3 +46,7 @@ target_link_libraries(matrop-scan matrop-framework pthread)
 add_executable(matrop-conv ${CONV_FILES})
 target_compile_definitions(matrop-conv PUBLIC -DCONV)
 target_link_libraries(matrop-conv matrop-framework pthread)
+
+#add_executable(matrop ${CONV_FILES} ${SCAN_FILES} ${MULTIPLY_FILES})
+#target_compile_definitions(matrop PUBLIC -DALL)
+#target_link_libraries(matrop matrop-framework pthread)
