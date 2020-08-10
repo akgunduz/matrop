@@ -174,7 +174,6 @@ bool ConvApp::process(std::vector<std::string> fileInputs, const char* filterFil
 
 bool ConvApp::run(bool multiMode, int argc, char argv[ARGV_MAX][PATH_MAX]) {
 
-    char fileBuffer[PATH_MAX];
     std::vector<std::string> fileInputs;
     std::string filterFile;
 

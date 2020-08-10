@@ -14,7 +14,7 @@ protected :
     uint32_t col{};
 
     size_t size{};
-    float *mem;
+    float *mem{};
 
 public:
 
@@ -24,7 +24,7 @@ public:
 
     bool allocMem(size_t, float **);
     void create(size_t, float *);
-    void readFromFile(const char*);
+    bool readFromFile(const char*);
     void consoleOut(int, int);
     bool printToFile(const char *);
 

@@ -19,7 +19,22 @@ Matrix::Matrix(uint32_t _row, uint32_t _col, bool prepare)
 
 Matrix::Matrix(const char *path) {
 
-    readFromFile(path);
+    int tryCount = 3;
+    do {
+
+        if (readFromFile(path)) {
+            break;
+        }
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+
+    } while (tryCount--);
+
+    if (!tryCount) {
+
+        throw std::runtime_error("Can not read from file!");
+    }
+
 }
 
 Matrix::~Matrix() {
@@ -63,23 +78,26 @@ void Matrix::create(size_t _size, float *_mem) {
     }
 }
 
-void Matrix::readFromFile(const char *path) {
+bool Matrix::readFromFile(const char *path) {
 
     FILE *fd = fopen(path, "r");
     if (!fd) {
-        throw std::runtime_error("File could not opened!");
+        printf("File could not opened!");
+        return false;
     }
 
     int res = fscanf(fd, "%d, %d", &row, &col);
     if (res == EOF) {
         fclose(fd);
-        throw std::runtime_error("File Read Error happened!");
+        printf("File Size Read Error!, err : %d", errno);
+        return false;
     }
 
     size = row * col;
     if (!allocMem(size, &mem)) {
         fclose(fd);
-        throw std::runtime_error("Memory insufficient!");
+        printf("Memory insufficient!, requested size : %zu", size);
+        return false;
     }
 
     for (int i = 0; i < size; i++) {
@@ -87,11 +105,14 @@ void Matrix::readFromFile(const char *path) {
         res = fscanf(fd, "%f,", &mem[i]);
         if (res == EOF) {
             fclose(fd);
-            throw std::runtime_error("File Read Error happened!");
+            printf("File Data Read Error!, index : %d, err : %u", i, errno);
+            return false;
         }
     }
 
     fclose(fd);
+
+    return true;
 }
 
 bool Matrix::printToFile(const char *path) {
@@ -101,7 +122,7 @@ bool Matrix::printToFile(const char *path) {
         return false;
     }
 
-    fprintf(fd, "%d,%d\n\n", row, col);
+    fprintf(fd, "%d, %d\n\n", row, col);
 
     for (int i = 0; i < size; i++) {
 
