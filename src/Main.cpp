@@ -1,8 +1,6 @@
 #include <multiply/MultiplyApp.h>
 #include <scan/ScanApp.h>
 #include <conv/ConvApp.h>
-#include "App.h"
-#include "Util.h"
 
 int main(int argc, char *const *argv) {
 
@@ -14,7 +12,9 @@ int main(int argc, char *const *argv) {
     int filtered_argc = 0;
     char filtered_argv[ARGV_MAX][PATH_MAX];
 
+#ifndef _WIN32
     setenv("LC_NUMERIC", "C", 1);
+#endif
 
     for (int i = 1; i < argc; i++) {
 

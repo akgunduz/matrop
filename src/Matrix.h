@@ -23,6 +23,7 @@ public:
     virtual ~Matrix();
 
     bool allocMem(size_t, float **);
+    bool freeMem(float *);
     void create(size_t, float *);
     bool readFromFile(const char*);
     void consoleOut(int, int);
@@ -33,6 +34,5 @@ public:
     uint32_t getCol() const;
     float* getMem();
 };
-
 
 #endif //MATROP_MATRIX_H

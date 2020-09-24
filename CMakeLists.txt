@@ -33,19 +33,28 @@ set(CONV_FILES
 
 include_directories(${SOURCE_PATH})
 
+if(WIN32)
+    add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
+    add_compile_definitions(INCL_EXTRA_HTON_FUNCTIONS)
+    add_compile_definitions(NOMINMAX)
+    list(APPEND LIBRARIES ws2_32)
+else()
+    list(APPEND LIBRARIES pthread)
+endif()
+
 add_library(matrop-framework ${FRAMEWORK_FILES})
 
 add_executable(matrop-multiply ${MULTIPLY_FILES})
 target_compile_definitions(matrop-multiply PUBLIC -DMULTIPLY)
-target_link_libraries(matrop-multiply matrop-framework pthread)
+target_link_libraries(matrop-multiply matrop-framework ${LIBRARIES})
 
 add_executable(matrop-scan ${SCAN_FILES})
 target_compile_definitions(matrop-scan PUBLIC -DSCAN)
-target_link_libraries(matrop-scan matrop-framework pthread)
+target_link_libraries(matrop-scan matrop-framework ${LIBRARIES})
 
 add_executable(matrop-conv ${CONV_FILES})
 target_compile_definitions(matrop-conv PUBLIC -DCONV)
-target_link_libraries(matrop-conv matrop-framework pthread)
+target_link_libraries(matrop-conv matrop-framework ${LIBRARIES})
 
 #add_executable(matrop ${CONV_FILES} ${SCAN_FILES} ${MULTIPLY_FILES})
 #target_compile_definitions(matrop PUBLIC -DALL)

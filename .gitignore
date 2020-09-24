@@ -31,6 +31,19 @@
 *.out
 *.app
 
+#Other
+*.bak
+*.xrc
 .DS_Store
-/cmake-build-*
-/.idea
+thumbs.db
+.cproject
+.gitattributes
+.project
+.depend
+
+/.idea/
+/.vscode/
+/.vs/
+*build*/
+*scratch*/
+*gen*/

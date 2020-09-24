@@ -5,6 +5,10 @@
 #include "Matrix.h"
 #include "Util.h"
 
+#ifdef _WIN32
+#define posix_memalign(p, a, s) (((*(p)) = _aligned_malloc((s), (a))), *(p) ?0 :errno)
+#endif
+
 Matrix::Matrix(uint32_t _row, uint32_t _col, bool prepare)
         : row(_row), col(_col), size(_row * _col) {
 
@@ -39,7 +43,7 @@ Matrix::Matrix(const char *path) {
 
 Matrix::~Matrix() {
 
-    free(mem);
+    freeMem(mem);
 }
 
 bool Matrix::allocMem(size_t _size, float **_mem) {
@@ -54,12 +58,27 @@ bool Matrix::allocMem(size_t _size, float **_mem) {
 
     int check = (int)((unsigned long long)(*_mem) % ALIGNMENT);
     if (check != 0) {
-        free(*_mem);
+        freeMem(*_mem);
         printf("Alignment failed!\n");
         return false;
     }
 
     memset(*_mem, 0, mem_size);
+    return true;
+}
+
+bool Matrix::freeMem(float *_mem) {
+
+    if (_mem == nullptr) {
+        return false;
+    }
+
+#ifdef _WIN32
+    _aligned_free(_mem);
+#else
+    free(_mem);
+#endif
+
     return true;
 }
 
@@ -82,30 +101,30 @@ bool Matrix::readFromFile(const char *path) {
 
     FILE *fd = fopen(path, "r");
     if (!fd) {
-        printf("File could not opened!");
-        return false;
-    }
-
-    int res = fscanf(fd, "%d, %d", &row, &col);
-    if (res == EOF) {
-        fclose(fd);
-        printf("File Size Read Error!, err : %d", errno);
+        printf("File could not opened!\n");
         return false;
     }
 
     size = row * col;
-    if (!allocMem(size, &mem)) {
+    int res = fscanf(fd, "%d, %d", &row, &col);
+    if (res == EOF) {
         fclose(fd);
-        printf("Memory insufficient!, requested size : %zu", size);
+        printf("File Size Read Error!, file : %s, size : %lu, err : %u\n", path, size, errno);
         return false;
     }
 
-    for (int i = 0; i < size; i++) {
+    if (!allocMem(size, &mem)) {
+        fclose(fd);
+        printf("Memory insufficient!, requested size : %zu\n", size);
+        return false;
+    }
+
+    for (size_t i = 0; i < size; i++) {
 
         res = fscanf(fd, "%f,", &mem[i]);
         if (res == EOF) {
             fclose(fd);
-            printf("File Data Read Error!, index : %d, err : %u", i, errno);
+            printf("File Data Read Error!, file : %s, size : %lu, index : %lu, err : %u\n", path, size, i, errno);
             return false;
         }
     }

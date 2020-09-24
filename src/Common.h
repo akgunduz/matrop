@@ -28,5 +28,8 @@
 #define MAX_FILE_COUNT 10
 #define MAX_TIMEARRAY_COUNT 1000
 #define MAX_ARGUMENT 10
+#ifndef PATH_MAX
+#define PATH_MAX 4096
+#endif
 
 #endif //MATROP_COMMON_H
