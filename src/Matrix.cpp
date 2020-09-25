@@ -105,13 +105,14 @@ bool Matrix::readFromFile(const char *path) {
         return false;
     }
 
-    size = row * col;
     int res = fscanf(fd, "%d, %d", &row, &col);
     if (res == EOF) {
         fclose(fd);
         printf("File Size Read Error!, file : %s, size : %lu, err : %u\n", path, size, errno);
         return false;
     }
+
+    size = row * col;
 
     if (!allocMem(size, &mem)) {
         fclose(fd);
