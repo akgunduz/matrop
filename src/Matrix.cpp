@@ -88,7 +88,7 @@ void Matrix::create(size_t _size, float *_mem) {
     std::default_random_engine generator(seed);
     std::uniform_real_distribution<float> distribution(0.0, 1.0);
 
-    printf("Preparing Input in Size: %ld\n", _size);
+    printf("Preparing Input in Size: %zu\n", _size);
 
     for (int i = 0; i < _size; i++) {
 
@@ -108,7 +108,7 @@ bool Matrix::readFromFile(const char *path) {
     int res = fscanf(fd, "%d, %d", &row, &col);
     if (res == EOF) {
         fclose(fd);
-        printf("File Size Read Error!, file : %s, size : %lu, err : %u\n", path, size, errno);
+        printf("File Size Read Error!, file : %s, size : %zu, err : %u\n", path, size, errno);
         return false;
     }
 
@@ -125,7 +125,7 @@ bool Matrix::readFromFile(const char *path) {
         res = fscanf(fd, "%f,", &mem[i]);
         if (res == EOF) {
             fclose(fd);
-            printf("File Data Read Error!, file : %s, size : %lu, index : %lu, err : %u\n", path, size, i, errno);
+            printf("File Data Read Error!, file : %s, size : %zu, index : %zu, err : %u\n", path, size, i, errno);
             return false;
         }
     }
